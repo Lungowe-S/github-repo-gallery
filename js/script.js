@@ -6,6 +6,10 @@ const overview = document.querySelector(".overview")
 const username = "Lungowe"
 // Select the unordered list that will display the repos list
 const repoList = document.querySelector(".repo-list")
+// Select the section with a class of repos
+const repos = document.querySelector(".repos")
+// Select the section with a class of repo-data
+const repoData = document.querySelector(".repo-data")
 
 /* ==== Fetch API/JSON Data ==== */
 async function fetchProfile() {
@@ -52,4 +56,43 @@ const displayRepos = (repos) => {
         listItem.innerHTML = `<h3>${repo.name}</h3>`
         repoList.append(listItem)
     }
+}
+
+/* ==== Click event on unordered list with a class of "repo-list" ==== */
+repoList.addEventListener("click", e => {
+    if (e.target.matches("h3")) {
+        let repoName = e.target.textContent
+        //console.log(repoName)
+        getRepoInfo(repoName)
+    }
+})
+
+/* ==== Async function to get repo specific info ==== */
+async function getRepoInfo(repoName) {
+    const getRepos = await fetch(`https://api.github.com/repos/${username}/${repoName}`)
+    const repoInfo = await getRepos.json()
+    //console.log(repoInfo)
+    const fetchLanguages = await fetch(repoInfo.languages_url)
+    const languageData = await fetchLanguages.json()
+    //console.log(languageData)
+    const languages = []
+    for (let language in languageData) {
+        languages.push(language)
+    }
+    //console.log(languages)
+    displayRepoInfo(repoInfo, languages)
+}
+
+/* ==== Function to Display Specific Repo Info ==== */
+const displayRepoInfo = (repoInfo, languages) => {
+    repoData.innerHTML = ""
+    const div = document.createElement("div")
+    div.innerHTML = `<h3>Name: ${repoInfo.name}</h3>
+        <p>Description: ${repoInfo.description}</p>
+        <p>Default Branch: ${repoInfo.default_branch}</p>
+        <p>Languages: ${languages.join(", ")}</p>
+        <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>`
+    repoData.append(div)
+    repoData.classList.remove("hide")
+    repos.classList.add("hide")
 }
