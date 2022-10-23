@@ -10,6 +10,10 @@ const repoList = document.querySelector(".repo-list")
 const repos = document.querySelector(".repos")
 // Select the section with a class of repo-data
 const repoData = document.querySelector(".repo-data")
+// Select the 'Back to Repo Gallery' button
+const backButton = document.querySelector(".view-repos")
+// Select input with 'Search by name' placeholder
+const filterInput = document.querySelector(".filter-repos")
 
 /* ==== Fetch API/JSON Data ==== */
 async function fetchProfile() {
@@ -50,6 +54,7 @@ async function fetchRepos() {
 
 /* ===== Function to display info about your repos ==== */
 const displayRepos = (repos) => {
+    filterInput.classList.remove("hide")
     for (const repo of repos) {
         const listItem = document.createElement("li")
         listItem.classList.add("repo")
@@ -95,4 +100,28 @@ const displayRepoInfo = (repoInfo, languages) => {
     repoData.append(div)
     repoData.classList.remove("hide")
     repos.classList.add("hide")
+    backButton.classList.remove("hide")
 }
+
+/* ==== Add a Click Event to the Back Button ==== */
+backButton.addEventListener("click", e => {
+    repos.classList.remove("hide")
+    repoData.classList.add("hide")
+    backButton.classList.add("hide")
+})
+
+/* ==== Add an Input Event to the Search Box ==== */
+filterInput.addEventListener("input", e => {
+    const searchText = e.target.value
+    //console.log(searchValue)
+    const repos = Array.from(document.querySelectorAll(".repo"))
+    let lowercaseSearch = searchText.toLowerCase()
+    for (const repo of repos) {
+        const repoText = repo.textContent.toLowerCase()
+        if (repoText.includes(lowercaseSearch)) {
+            repo.classList.remove("hide")
+        } else {
+            repo.classList.add("hide")
+        }
+    }
+})
