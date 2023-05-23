@@ -3,7 +3,7 @@
 // Select the div with the class of overview
 const overview = document.querySelector(".overview")
 // GitHub username
-const username = "Lungowe"
+const username = "Lungowe-S"
 // Select the unordered list that will display the repos list
 const repoList = document.querySelector(".repo-list")
 // Select the section with a class of repos
